@@ -47,4 +47,15 @@ public class M_Code {
         }
 
     }
+
+
+    public Boolean Metho_NewMenu(Object newM){
+
+        //들어오는 내용 Parsing 후 처리
+        //DB에 저장 코드 생성(프로시저 가능하면 프로시저로)
+
+
+
+        return true;
+    }
 }
