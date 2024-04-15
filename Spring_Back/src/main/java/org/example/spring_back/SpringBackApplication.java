@@ -22,6 +22,7 @@ public class SpringBackApplication {
 }
 
 
+//관리자 로그인 기능 및 회원가입 기능
 
 @RestController
 class AdminController {
@@ -66,5 +67,33 @@ class AdminController {
 			session.invalidate(); // 세션 파기
 		}
 		return "redirect:/login"; // 로그인 페이지나 홈으로 리다이렉트
+	}
+}
+
+
+//관리자 메뉴 관련 기능
+@RestController
+class MenuControl {
+
+	Control control_ = new Control();
+
+	//메뉴 저장버튼
+	@PostMapping("/insert-menu")
+	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
+
+		return ResponseEntity.ok(menu.toString());
+		/*if(control_.Insert_Menu((Menu) menu)){
+			return ResponseEntity.ok("Save Success!");
+		}
+		else return ResponseEntity.badRequest().body("Fail to Insert Menu...");*/
+	}
+
+	@PostMapping("/new_category_menu")
+	public ResponseEntity<String> New_Category(@RequestBody Object category) {
+
+		if(control_.New_Category(category)){
+			return ResponseEntity.ok("Save Success!");
+		}
+		else return ResponseEntity.badRequest().body("Fail to Insert Category...");
 	}
 }

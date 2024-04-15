@@ -1,11 +1,10 @@
 package org.example.spring_back.Metho_Code;
 
-import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 import org.example.spring_back.User.User_Data;
 import org.example.spring_back.User.LoginCredentials;
-import org.springframework.stereotype.Service;
-import org.example.spring_back.User.User_Data;
+
 
 //Json 읽기
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,4 +46,22 @@ public class M_Code {
         }
 
     }
+
+
+    public String Insert_Menu(Menu menu){
+        try {
+            // 이미지 파일 저장
+            MultipartFile file = menu.getMenuImage();
+            if (file != null && !file.isEmpty()) {
+                String destination = "파일 저장 경로" + file.getOriginalFilename();
+                file.transferTo(new File(destination));
+                
+                //DB에 데이터 저장
+            }
+            return "Success";
+        } catch (IOException e) {
+            return "Fail : " + e.getMessage();
+        }
+    }
+
 }
