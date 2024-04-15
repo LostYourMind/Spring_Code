@@ -1,7 +1,10 @@
+//Control.java
+
 package org.example.spring_back;
-import jakarta.servlet.http.HttpSession;
+import org.example.spring_back.Menu.Menu;
 import org.example.spring_back.Metho_Code.M_Code;
 import org.example.spring_back.User.User_Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 
@@ -32,11 +35,10 @@ public class Control {
     }
     
     //메뉴 등록
-    public Boolean Con_NewMenu(Object newM){
-        
-        //Metho_Code 함수 호출
-        
-        return true;
+    public Boolean Insert_Menu(Menu menu){
+        String temp = code_.Insert_Menu(menu);
+        if(temp == "Success"){ return true; }
+        else {return false;}
     }
 
 }

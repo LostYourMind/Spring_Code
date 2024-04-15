@@ -2,15 +2,20 @@ package org.example.spring_back;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.example.spring_back.Menu.Menu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.example.spring_back.User.User_Data;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @SpringBootApplication
 public class SpringBackApplication {
@@ -20,7 +25,6 @@ public class SpringBackApplication {
 	}
 
 }
-
 
 
 @RestController
@@ -42,18 +46,22 @@ class AdminController {
 
 	//로그인 EndPoint
 	@PostMapping("/login")
-	public ResponseEntity Login(@RequestBody Object login_Req, HttpSession session) {
-
+	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
 		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
 
 		String user_id = credentials.get("loginId");
 
 		boolean result = control_.AuthenticateUser(login_Req);
+
 		if (result) {
-			session.setAttribute("USER_ID", user_id);
-			return ResponseEntity.ok(true);
+			HttpSession session = request.getSession(true); // 현재 세션을 반환하거나 없으면 새 세션 생성
+			if (session.isNew()) {
+				// 필요한 경우, 세션에 추가 데이터를 저장합니다.
+				session.setAttribute("username", user_id);
+			}
+			return ResponseEntity.ok("Login successful");
 		} else {
-			return ResponseEntity.badRequest().body(false);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
 		}
 	}
 
@@ -69,22 +77,21 @@ class AdminController {
 	}
 }
 
-@RestController
 
+@RestController
 class MenuControl {
 
-	//메뉴등록
-	@PostMapping("/admin/new-menu")
-	public ResponseEntity<Boolean> New_Menu(@RequestBody Object menu) {
-
-		//Control Instance 호출
-		return ResponseEntity.ok(true);
-	}
+	Control control_ = new Control();
 
 	//메뉴 저장버튼
-	@PostMapping("/admin/insert-menu")
-	public ResponseEntity<Boolean> Insert_Menu(@RequestBody Object menu) {
-		return ResponseEntity.ok(true);
+	@PostMapping("/insert-menu")
+	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
+
+
+		if(control_.Insert_Menu((Menu) menu)){
+			return ResponseEntity.ok("Save Success!");
+		}
+		else return ResponseEntity.badRequest().body("Fail to Insert Menu...");
 	}
 }
 
