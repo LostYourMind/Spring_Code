@@ -12,6 +12,8 @@ public class Control {
 
     M_Code code_ = new M_Code();
 
+    //region 회원가입 & 로그인
+
     //회원가입 기능
     public String createUser(User_Data temp){
         boolean req = code_.CreateUser(temp);
@@ -40,5 +42,18 @@ public class Control {
         if(temp == "Success"){ return true; }
         else {return false;}
     }
+
+
+    //endregion
+
+
+    //region 메뉴 관리
+
+    public Boolean New_Category(Object menu){
+
+        return true;
+    }
+
+    //endregion
 
 }
