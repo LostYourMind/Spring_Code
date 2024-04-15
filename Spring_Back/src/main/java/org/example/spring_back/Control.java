@@ -49,13 +49,6 @@ public class Control {
 
     //region 메뉴 관리
 
-    //메뉴 등록
-    public Boolean Insert_Menu(Menu menu){
-        String temp = code_.Insert_Menu(menu);
-        if(temp == "Success"){ return true; }
-        else {return false;}
-    }
-
     public Boolean New_Category(Object menu){
 
         return true;
