@@ -21,7 +21,6 @@ public class Control {
     public Boolean AuthenticateUser(Object login_Req){
 
         LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
-        // LinkedHashMap에서 username과 password를 추출
 
         String user_id = credentials.get("loginId");
         String password = credentials.get("password");
@@ -30,13 +29,21 @@ public class Control {
         if(req){ return true; }
         else {return false;}
     }
-    
-    //메뉴 등록
-    public Boolean Con_NewMenu(Object newM){
-        
-        //Metho_Code 함수 호출
-        
-        return true;
-    }
 
+    //endregion
+
+
+    //region 메뉴 관리
+
+//    //메뉴 등록
+//    public Boolean Insert_Menu(Menu menu){
+//        String temp = code_.Insert_Menu(menu);
+//        if(temp.equals("Success")){ return true; }
+//        else {return false;}
+//    }
+//
+//    public Boolean New_Category(Object menu){
+//
+//        return true;
+//    }
 }
