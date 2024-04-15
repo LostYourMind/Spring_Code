@@ -68,3 +68,23 @@ class AdminController {
 		return "redirect:/login"; // 로그인 페이지나 홈으로 리다이렉트
 	}
 }
+
+@RestController
+
+class MenuControl {
+
+	//메뉴등록
+	@PostMapping("/admin/new-menu")
+	public ResponseEntity<Boolean> New_Menu(@RequestBody Object menu) {
+
+		//Control Instance 호출
+		return ResponseEntity.ok(true);
+	}
+
+	//메뉴 저장버튼
+	@PostMapping("/admin/insert-menu")
+	public ResponseEntity<Boolean> Insert_Menu(@RequestBody Object menu) {
+		return ResponseEntity.ok(true);
+	}
+}
+

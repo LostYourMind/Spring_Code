@@ -17,6 +17,7 @@ public class Control {
         else {return "false";}
     }
 
+    //로그인 인증
     public Boolean AuthenticateUser(Object login_Req){
 
         LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
@@ -28,6 +29,14 @@ public class Control {
         boolean req = code_.AuthenticateUser(user_id, password);
         if(req){ return true; }
         else {return false;}
+    }
+    
+    //메뉴 등록
+    public Boolean Con_NewMenu(Object newM){
+        
+        //Metho_Code 함수 호출
+        
+        return true;
     }
 
 }
