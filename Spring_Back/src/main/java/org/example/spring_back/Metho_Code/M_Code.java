@@ -1,15 +1,21 @@
+//M_Code.java
+
+
 package org.example.spring_back.Metho_Code;
 
-import jakarta.servlet.http.HttpSession;
+
+import org.example.spring_back.Menu.Menu;
 import org.springframework.stereotype.Service;
 import org.example.spring_back.User.User_Data;
 import org.example.spring_back.User.LoginCredentials;
-import org.springframework.stereotype.Service;
-import org.example.spring_back.User.User_Data;
+
 
 //Json 읽기
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
+import java.io.IOException;
 
 
 @Service
@@ -26,7 +32,6 @@ public class M_Code {
 
         return u_date != null;
     }
-
 
     public Boolean AuthenticateUser(String username, String password){
         String jsonfile = "C:\\Users\\WSU\\Documents\\GitHub\\Spring\\Caps_Spring_Code\\Test\\src\\main\\java\\org\\example\\test\\User\\test.json";
@@ -46,5 +51,19 @@ public class M_Code {
             return false;
         }
 
+    }
+
+    public String Insert_Menu(Menu menu){
+        try {
+            // 이미지 파일 저장
+            MultipartFile file = menu.getMenuImage();
+            if (file != null && !file.isEmpty()) {
+                String destination = "파일 저장 경로" + file.getOriginalFilename();
+                file.transferTo(new File(destination));
+            }
+            return "Success";
+        } catch (IOException e) {
+            return "Fail : " + e.getMessage();
+        }
     }
 }
