@@ -1,6 +1,9 @@
 //Control.java
 
 package org.example.spring_back;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.example.spring_back.Menu.Menu;
 import org.example.spring_back.Metho_Code.M_Code;
 import org.example.spring_back.Metho_Code.MenuControl.MenuControl;
@@ -37,6 +40,14 @@ public class Control {
         else {return false;}
     }
 
+    public String CheckCookie(HttpServletRequest request, String cookieName){
+        String getCookie = code_.getCookieValue(request, cookieName);
+
+        if(getCookie != null){
+            return getCookie;
+        }
+        else {return null;}
+    }
 
     
 

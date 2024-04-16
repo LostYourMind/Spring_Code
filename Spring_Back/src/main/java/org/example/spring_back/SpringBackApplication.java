@@ -62,7 +62,7 @@ class AdminController {
 			}
 
 			// 새로 추가된 부분: 로그인 성공 쿠키 설정
-			Cookie loginCookie = new Cookie("user_login", "true");
+			Cookie loginCookie = new Cookie("user_login", user_id);
 			loginCookie.setMaxAge(30 * 60); // 30분 동안 유효
 			loginCookie.setHttpOnly(true); // JavaScript가 쿠키에 접근하지 못하도록 설정
 			loginCookie.setPath("/"); // 모든 경로에서 쿠키 접근 가능
@@ -79,16 +79,41 @@ class AdminController {
 		}
 	}
 
+	@PostMapping("users/info")
+	public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
+
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No cookies found");
+		}
+
+		String sessionId = null;
+		for (Cookie cookie : cookies) {
+			if ("JSESSIONID".equals(cookie.getName())) {
+				sessionId = cookie.getValue();
+				break;
+			}
+		}
+
+		if (sessionId == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JSESSIONID not found");
+		}
+
+		return ResponseEntity.ok("Session ID: " + sessionId);
+	}
+
 
 	@PutMapping("/logout")
-	public String  logout(HttpServletRequest request) {
+	public ResponseEntity<String> logout(HttpServletRequest request) {
 
 		HttpSession session = request.getSession(false); // 현재 세션 가져오기, 없으면 null 반환
 
 		if (session != null) {
 			session.invalidate(); // 세션 파기
+			return ResponseEntity.ok("Logout successful");
 		}
-		return "redirect:/login"; // 로그인 페이지나 홈으로 리다이렉트
+		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Logout failed");
+
 	}
 }
 
@@ -106,10 +131,11 @@ class MenuControl {
 	@PostMapping("/insert-menu")
 	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
 
-		if(control_.Insert_Menu((Menu) menu)) {
+		return ResponseEntity.ok(menu.toString());
+		/*if(control_.Insert_Menu((Menu) menu)) {
 			return ResponseEntity.ok(menu.toString());
 		}
-		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Insert Menu failed");
+		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Insert Menu failed");*/
 	}
 
 	//메뉴 삭제

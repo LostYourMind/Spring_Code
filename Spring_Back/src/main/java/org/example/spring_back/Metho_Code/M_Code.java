@@ -6,22 +6,22 @@ package org.example.spring_back.Metho_Code;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.stereotype.Service;
 import org.example.spring_back.Repository_Interface.UserRepository;
-import org.example.spring_back.Menu.Menu;
+
 import org.example.spring_back.User.User_Data;
 import org.example.spring_back.User.LoginCredentials;
 
 
 //Json 읽기
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
-import java.io.IOException;
+
 
 
 @Service
@@ -74,6 +74,19 @@ public class M_Code {
             return false;
         }
 
+    }
+
+
+    public String getCookieValue(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null; // 쿠키가 없는 경우 null 반환
     }
 
     //endregion
