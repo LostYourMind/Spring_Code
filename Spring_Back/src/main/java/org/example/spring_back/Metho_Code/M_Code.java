@@ -3,12 +3,14 @@
 
 package org.example.spring_back.Metho_Code;
 
-
 import org.example.spring_back.Menu.Menu;
-import org.springframework.stereotype.Service;
+import org.example.spring_back.Repository_Interface.UserRepository;
 import org.example.spring_back.User.User_Data;
 import org.example.spring_back.User.LoginCredentials;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 //Json 읽기
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,16 +23,19 @@ import java.io.IOException;
 @Service
 public class M_Code {
 
+    @Autowired
+    private UserRepository userRepository;
+
     //회원가입 기능
-    public Boolean CreateUser(User_Data temp){
-        String userName = temp.getUserName();
+    @Transactional
+    public User_Data createUser(User_Data temp){
+       /* String userName = temp.getUserName();
         String userID = temp.getUserId();
         String userPW = temp.getUserPw();
-        String userEmail = temp.getUserEmail();
+        String userEmail = temp.getUserEmail();*/
 
-        User_Data u_date = new User_Data(userID, userPW, userName, userEmail);
-
-        return u_date != null;
+        /*User_Data u_date = new User_Data(userID, userPW, userName, userEmail);*/
+        return userRepository.save(temp);  // 데이터베이스에 사용자 정보 저장
     }
 
     public Boolean AuthenticateUser(String username, String password){
@@ -66,4 +71,6 @@ public class M_Code {
             return "Fail : " + e.getMessage();
         }
     }
+
+
 }

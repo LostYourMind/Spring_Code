@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.example.spring_back.User.User_Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -77,7 +76,6 @@ class AdminController {
 	}
 }
 
-
 @RestController
 class MenuControl {
 
@@ -86,7 +84,6 @@ class MenuControl {
 	//메뉴 저장버튼
 	@PostMapping("/insert-menu")
 	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
-
 
 		if(control_.Insert_Menu((Menu) menu)){
 			return ResponseEntity.ok("Save Success!");

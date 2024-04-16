@@ -4,7 +4,6 @@ package org.example.spring_back;
 import org.example.spring_back.Menu.Menu;
 import org.example.spring_back.Metho_Code.M_Code;
 import org.example.spring_back.User.User_Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 
@@ -14,9 +13,9 @@ public class Control {
 
     //회원가입 기능
     public String createUser(User_Data temp){
-        boolean req = code_.CreateUser(temp);
+        User_Data req = code_.createUser(temp);
 
-        if(req){ return "성공"; }
+        if(req != null){ return "성공"; }
         else {return "false";}
     }
 
