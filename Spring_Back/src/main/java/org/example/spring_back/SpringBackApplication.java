@@ -1,17 +1,17 @@
 package org.example.spring_back;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.spring_back.Menu.Menu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.example.spring_back.User.User_Data;
+
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,7 +47,8 @@ class AdminController {
 
 	//로그인 EndPoint
 	@PostMapping("/login")
-	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
+	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request, HttpServletResponse response) {
+
 		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
 
 		String user_id = credentials.get("loginId");
@@ -57,14 +58,27 @@ class AdminController {
 		if (result) {
 			HttpSession session = request.getSession(true); // 현재 세션을 반환하거나 없으면 새 세션 생성
 			if (session.isNew()) {
-				// 필요한 경우, 세션에 추가 데이터를 저장합니다.
-				session.setAttribute("username", user_id);
+				session.setAttribute("username", user_id); // 세션에 사용자 이름 저장
 			}
+
+			// 새로 추가된 부분: 로그인 성공 쿠키 설정
+			Cookie loginCookie = new Cookie("user_login", "true");
+			loginCookie.setMaxAge(30 * 60); // 30분 동안 유효
+			loginCookie.setHttpOnly(true); // JavaScript가 쿠키에 접근하지 못하도록 설정
+			loginCookie.setPath("/"); // 모든 경로에서 쿠키 접근 가능
+
+			// HTTPS 환경에서만 쿠키를 전송
+			if (request.isSecure()) {
+				loginCookie.setSecure(true);
+			}
+			response.addCookie(loginCookie); // 쿠키를 HTTP 응답에 추가
+
 			return ResponseEntity.ok("Login successful");
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
 		}
 	}
+
 
 	@PutMapping("/logout")
 	public String  logout(HttpServletRequest request) {
@@ -92,17 +106,21 @@ class MenuControl {
 	@PostMapping("/insert-menu")
 	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
 
-
-		if(control_.Insert_Menu((Menu) menu)){
-
-
-		return ResponseEntity.ok(menu.toString());
-		/*if(control_.Insert_Menu((Menu) menu)){
-			return ResponseEntity.ok("Save Success!");
+		if(control_.Insert_Menu((Menu) menu)) {
+			return ResponseEntity.ok(menu.toString());
 		}
-		else return ResponseEntity.badRequest().body("Fail to Insert Menu...");*/
+		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Insert Menu failed");
 	}
 
+	//메뉴 삭제
+	@DeleteMapping("/del-memu")
+	public ResponseEntity<String> Delete_Menu(@RequestBody List<Menu> menu) {
+
+		return ResponseEntity.ok(menu.toString());
+	}
+	
+	
+	//카테고리 생성
 	@PostMapping("/new_category_menu")
 	public ResponseEntity<String> New_Category(@RequestBody Object category) {
 
@@ -111,6 +129,13 @@ class MenuControl {
 		}
 		else return ResponseEntity.badRequest().body("Fail to Insert Category...");
 	}
+
+	//카테고리 삭제
+	@DeleteMapping("/del-category")
+	public ResponseEntity<String> Delete_Category(@RequestBody Object category) {
+		return ResponseEntity.ok(category.toString());
+	}
+
 }
 
 

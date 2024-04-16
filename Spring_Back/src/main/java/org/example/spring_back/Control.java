@@ -3,6 +3,7 @@
 package org.example.spring_back;
 import org.example.spring_back.Menu.Menu;
 import org.example.spring_back.Metho_Code.M_Code;
+import org.example.spring_back.Metho_Code.MenuControl.MenuControl;
 import org.example.spring_back.User.User_Data;
 
 import java.util.LinkedHashMap;
@@ -10,6 +11,7 @@ import java.util.LinkedHashMap;
 public class Control {
 
     M_Code code_ = new M_Code();
+    MenuControl menuControl_ = new MenuControl();
 
     //region 회원가입 & 로그인
 
@@ -34,19 +36,23 @@ public class Control {
         if(req){ return true; }
         else {return false;}
     }
+
+
     
-    //메뉴 등록
-    public Boolean Insert_Menu(Menu menu){
-        String temp = code_.Insert_Menu(menu);
-        if(temp == "Success"){ return true; }
-        else {return false;}
-    }
+
 
 
     //endregion
 
 
     //region 메뉴 관리
+
+    //메뉴 등록
+    public Boolean Insert_Menu(Menu menu){
+        String temp = menuControl_.Insert_Menu(menu);
+        if(temp == "Success"){ return true; }
+        else {return false;}
+    }
 
     public Boolean New_Category(Object menu){
 
