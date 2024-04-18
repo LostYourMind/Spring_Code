@@ -8,6 +8,9 @@ import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +34,7 @@ public class M_Code {
     private UserRepository userRepository;
     @PersistenceContext
     private EntityManager entityManager;
-
+    private final Logger logger = LogManager.getLogger(M_Code.class);
     //region 회원 관리 기능
 
     //회원가입 기능
@@ -77,12 +80,17 @@ public class M_Code {
     }
 
 
-    public String getCookieValue(HttpServletRequest request, String cookieName) {
+    public String getCookieValue(HttpServletRequest request) {
+
+        String userId = null;
+        logger.trace("getCookieValue operation start");
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookieName.equals(cookie.getName())) {
-                    return cookie.getValue();
+                if ("user_login".equals(cookie.getName())) {
+                    userId = cookie.getValue();
+                    logger.info("getCookieValue return value : {}",userId);
+                    return userId;
                 }
             }
         }

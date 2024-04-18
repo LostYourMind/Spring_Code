@@ -40,8 +40,8 @@ public class Control {
         else {return false;}
     }
 
-    public String CheckCookie(HttpServletRequest request, String cookieName){
-        String getCookie = code_.getCookieValue(request, cookieName);
+    public String CheckCookie(HttpServletRequest request){
+        String getCookie = code_.getCookieValue(request);
 
         if(getCookie != null){
             return getCookie;
