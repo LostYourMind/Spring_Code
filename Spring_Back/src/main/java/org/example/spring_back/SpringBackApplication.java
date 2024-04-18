@@ -4,6 +4,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.spring_back.Menu.Menu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,16 +33,21 @@ public class SpringBackApplication {
 @RestController
 class AdminController {
 
+	private final Logger logger = LogManager.getLogger(AdminController.class);
 	Control control_ = new Control();
 
 	//회원가입 EndPoint
 	@PostMapping("/join")
-
 	public ResponseEntity<Boolean> createUser(@RequestBody User_Data user) {
 		String result = control_.createUser(user);
-		if("성공".equals(result)) {
+		try{
+			if("성공".equals(result)) {
+				logger.info("createUser operation was success");
+			}
 			return ResponseEntity.ok(true); // HTTP 200 with true
-		} else {
+		}
+		catch(Exception e) {
+			logger.error("An error occurred during the createUser operation", e);
 			return ResponseEntity.badRequest().body(false); // HTTP 400 with false
 		}
 	}
@@ -52,38 +59,54 @@ class AdminController {
 		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
 
 		String user_id = credentials.get("loginId");
-
+		HttpSession session;
 		boolean result = control_.AuthenticateUser(login_Req);
+		try{
+			if (result) {
+				session = request.getSession(true); // 현재 세션을 반환하거나 없으면 새 세션 생성
+				if (session.isNew()) {
+					session.setAttribute("username", user_id); // 세션에 사용자 이름 저장
+				}
 
-		if (result) {
-			HttpSession session = request.getSession(true); // 현재 세션을 반환하거나 없으면 새 세션 생성
-			if (session.isNew()) {
-				session.setAttribute("username", user_id); // 세션에 사용자 이름 저장
-			}
-
-			// 새로 추가된 부분: 로그인 성공 쿠키 설정
-			Cookie loginCookie = new Cookie("user_login", user_id);
-			loginCookie.setMaxAge(30 * 60); // 30분 동안 유효
-			loginCookie.setHttpOnly(true); // JavaScript가 쿠키에 접근하지 못하도록 설정
-			loginCookie.setPath("/"); // 모든 경로에서 쿠키 접근 가능
-
-			// HTTPS 환경에서만 쿠키를 전송
-			if (request.isSecure()) {
+				// 새로 추가된 부분: 로그인 성공 쿠키 설정
+				Cookie loginCookie = new Cookie("user_login", user_id);
+				loginCookie.setMaxAge(30 * 60); // 30분 동안 유효
+				loginCookie.setHttpOnly(true); // JavaScript 쿠키에 접근하지 못하도록 설정
+				loginCookie.setPath("/"); // 모든 경로에서 쿠키 접근 가능
 				loginCookie.setSecure(true);
-			}
-			response.addCookie(loginCookie); // 쿠키를 HTTP 응답에 추가
 
+				// SameSite 설정을 위한 쿠키 문자열 직접 추가
+				String cookieHeader = String.format("%s=%s; Path=%s; Max-Age=%s; Secure; HttpOnly; SameSite=None",
+						loginCookie.getName(), loginCookie.getValue(), loginCookie.getPath(), loginCookie.getMaxAge());
+				response.setHeader("Set-Cookie", cookieHeader);
+
+				logger.info("login operation was success : {}, {}",session.getId(),loginCookie.getName());
+			}
 			return ResponseEntity.ok("Login successful");
-		} else {
+		}catch(Exception e) {
+			logger.error("An error occurred during the login operation", e);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
 		}
 	}
 
-	@PostMapping("users/info")
-	public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
+	@PostMapping("/info")
+	public String getUserInfo(HttpServletRequest request) {
+		Cookie[] list = request.getCookies();
+		logger.info("Cookies: {}", list.length);
+		for(Cookie cookie:list) {
+			if(cookie.getName().equals("user_login")) {
+				logger.info(cookie.getValue());
+			}
+		}
+		return "test";
 
+
+		/*logger.trace("Starting performSomeLogic method");
 		Cookie[] cookies = request.getCookies();
+		logger.info("HttpServletRequest = {}",request);
+		logger.info("cookies = {}", cookies);
 		if (cookies == null) {
+			logger.error("No Cookies found");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No cookies found");
 		}
 
@@ -91,15 +114,17 @@ class AdminController {
 		for (Cookie cookie : cookies) {
 			if ("JSESSIONID".equals(cookie.getName())) {
 				sessionId = cookie.getValue();
+				logger.info("JSESSIONID = {}", sessionId);
 				break;
 			}
 		}
 
 		if (sessionId == null) {
+			logger.error("No JSESSIONID found");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JSESSIONID not found");
 		}
 
-		return ResponseEntity.ok("Session ID: " + sessionId);
+		return ResponseEntity.ok("Session ID: " + sessionId + "Cookies: " + cookies);*/
 	}
 
 
@@ -108,38 +133,45 @@ class AdminController {
 
 		HttpSession session = request.getSession(false); // 현재 세션 가져오기, 없으면 null 반환
 
-		if (session != null) {
-			session.invalidate(); // 세션 파기
+		try{
+			if (session != null) {
+				session.invalidate(); // 세션 파기
+				logger.info("logout operation was successful");
+			}
 			return ResponseEntity.ok("Logout successful");
+		}catch(Exception e) {
+			logger.error("An error occurred during the logout", e);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Logout failed");
 		}
-		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Logout failed");
-
 	}
 }
 
 
 
 //관리자 메뉴 관련 기능
-
-
 @RestController
 class MenuControl {
 
+	private final Logger logger = LogManager.getLogger(MenuControl.class);
 	Control control_ = new Control();
 
 	//메뉴 저장버튼
 	@PostMapping("/insert-menu")
 	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
 
+		logger.trace("Insert_Menu Operation Start");
+		logger.info("Insert_Menu Operation End");
 		return ResponseEntity.ok(menu.toString());
+
 		/*if(control_.Insert_Menu((Menu) menu)) {
 			return ResponseEntity.ok(menu.toString());
 		}
 		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Insert Menu failed");*/
+
 	}
 
 	//메뉴 삭제
-	@DeleteMapping("/del-memu")
+	@DeleteMapping("/del-menu")
 	public ResponseEntity<String> Delete_Menu(@RequestBody List<Menu> menu) {
 
 		return ResponseEntity.ok(menu.toString());
@@ -163,6 +195,3 @@ class MenuControl {
 	}
 
 }
-
-
-
