@@ -79,22 +79,11 @@ public class M_Code {
 
     }
 
-
-    public String getCookieValue(HttpServletRequest request) {
-
-        String userId = null;
-        logger.trace("getCookieValue operation start");
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("user_login".equals(cookie.getName())) {
-                    userId = cookie.getValue();
-                    logger.info("getCookieValue return value : {}",userId);
-                    return userId;
-                }
-            }
-        }
-        return null; // 쿠키가 없는 경우 null 반환
+    
+    //사람 찾아버리는 기능
+    public String findUser(String UserEmail){
+        //찾아버려!!!기능 넣어줘
+        return "5678";
     }
 
     //endregion

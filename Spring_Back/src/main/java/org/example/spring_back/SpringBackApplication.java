@@ -13,10 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.spring_back.User.User_Data;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication
 public class SpringBackApplication {
@@ -76,23 +78,7 @@ class AdminController {
 		}
 	}
 
-	@GetMapping("/info")
-	public ResponseEntity<String> getUserInfo(HttpServletRequest request) {
-
-		String ToF = control_.CheckCookie(request);
-		logger.info("Cookie : {}",ToF);
-		String user = "1234";
-		if(ToF != null) {
-			logger.info("getUserInfo operation was success");
-			return ResponseEntity.ok(user);
-		}
-		else {
-			logger.error("getUserInfo operation was failed");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");}
-
-	}
-
-
+	//로그아웃 EndPoint
 	@PostMapping("/logout")
 	public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
 
@@ -109,6 +95,36 @@ class AdminController {
 		logger.info("logout operation was success");
 		return ResponseEntity.ok("Logged out successfully");
 	}
+
+	//아이디 찾기 EndPoint
+	@PutMapping("/findid")
+	public ResponseEntity<?> findUser(@RequestBody User_Data user) {
+
+		String emailValue = user.getUserEmail();
+
+		try{
+			String result = control_.findUser(emailValue);
+			if(result != null) {
+				logger.info("findUser operation was success");
+				return ResponseEntity.ok("User PW : " + result);
+			}
+			else {
+				logger.info("findUser operation was failed");
+				throw new Exception();
+			}
+		}
+		catch(Exception e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+
+
+	}
+
+	//비밀번호 찾기 EndPoint
+	@PutMapping("/findPw")
+	public ResponseEntity<String> findPw(@RequestBody User_Data user) {
+		return ResponseEntity.ok("user");
+	}
 }
 
 
@@ -122,41 +138,26 @@ class MenuControl {
 
 	//메뉴 저장버튼
 	@PostMapping("/insert-menu")
-	public ResponseEntity<String> Insert_Menu(@RequestBody List<Menu> menu) {
+	public ResponseEntity<?> insertMenu(@RequestBody Menu menuDataDTO) {
 
-		logger.trace("Insert_Menu Operation Start");
-
-		return ResponseEntity.ok(menu.toString());
-
-		/*if(control_.Insert_Menu((Menu) menu)) {
-			return ResponseEntity.ok(menu.toString());
+		try{
+			Boolean insert_Result = control_.Insert_Menu(menuDataDTO);
+			if(insert_Result == false){
+				throw new Exception();
+			}
+			logger.info("insertMenu operation was success");
+			return ResponseEntity.ok(menuDataDTO);
 		}
-		else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Insert Menu failed");*/
-
+		catch(Exception e) {return ResponseEntity.badRequest().body("Insert Menu failed : " + e.getMessage());}
 	}
+
+
 
 	//메뉴 삭제
 	@DeleteMapping("/del-menu")
 	public ResponseEntity<String> Delete_Menu(@RequestBody List<Menu> menu) {
 
 		return ResponseEntity.ok(menu.toString());
-	}
-	
-	
-	//카테고리 생성
-	@PostMapping("/new_category_menu")
-	public ResponseEntity<String> New_Category(@RequestBody Object category) {
-
-		if(control_.New_Category(category)){
-			return ResponseEntity.ok("Save Success!");
-		}
-		else return ResponseEntity.badRequest().body("Fail to Insert Category...");
-	}
-
-	//카테고리 삭제
-	@DeleteMapping("/del-category")
-	public ResponseEntity<String> Delete_Category(@RequestBody Object category) {
-		return ResponseEntity.ok(category.toString());
 	}
 
 }

@@ -2,8 +2,6 @@
 
 package org.example.spring_back;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import org.example.spring_back.Menu.Menu;
 import org.example.spring_back.Metho_Code.M_Code;
 import org.example.spring_back.Metho_Code.MenuControl.MenuControl;
@@ -40,17 +38,12 @@ public class Control {
         else {return false;}
     }
 
-    public String CheckCookie(HttpServletRequest request){
-        String getCookie = code_.getCookieValue(request);
+    //아이디 찾기 기능
+    public String findUser(String userEmail){
 
-        if(getCookie != null){
-            return getCookie;
-        }
-        else {return null;}
+        String temp = code_.findUser(userEmail);
+        return temp;
     }
-
-    
-
 
 
     //endregion
@@ -59,16 +52,12 @@ public class Control {
     //region 메뉴 관리
 
     //메뉴 등록
-    public Boolean Insert_Menu(Menu menu){
-        String temp = menuControl_.Insert_Menu(menu);
-        if(temp == "Success"){ return true; }
-        else {return false;}
+    public Boolean Insert_Menu(Menu menuDataDTO){
+
+        Boolean insert_result = menuControl_.Insert_Menu(menuDataDTO);
+        return insert_result;
     }
 
-    public Boolean New_Category(Object menu){
-
-        return true;
-    }
 
     //endregion
 
