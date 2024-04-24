@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.spring_back.Menu.Menu;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -35,18 +36,31 @@ public class SpringBackApplication {
 @RestController
 class AdminController {
 
+	//region 맴버필트 & 생성자
+
 	private final Logger logger = LogManager.getLogger(AdminController.class);
-	Control control_ = new Control();
+
+	private final Control control_;
+
+	@Autowired
+	public AdminController(Control control) {
+		this.control_ = control;
+	}
+
+	//endregion
+
+
+	//region 회원가입 & 로그인 & 아이디 + 비밀번호 찾기
 
 	//회원가입 EndPoint
 	@PostMapping("/join")
 	public ResponseEntity<Boolean> createUser(@RequestBody User_Data user) {
-		String result = control_.createUser(user);
+
+		User_Data result = control_.createUser(user);
 		try{
-			if("성공".equals(result)) {
-				logger.info("createUser operation was success");
-			}
-			return ResponseEntity.ok(true); // HTTP 200 with true
+			if(result == null){ throw new Exception(); }
+            logger.info("User created : {}", user);
+			return ResponseEntity.ok(true);
 		}
 		catch(Exception e) {
 			logger.error("An error occurred during the createUser operation", e);
@@ -125,6 +139,10 @@ class AdminController {
 	public ResponseEntity<String> findPw(@RequestBody User_Data user) {
 		return ResponseEntity.ok("user");
 	}
+
+	//endregion
+
+
 }
 
 
@@ -133,8 +151,21 @@ class AdminController {
 @RestController
 class MenuControl {
 
+	//region 맴버필드 & 생성자
+
 	private final Logger logger = LogManager.getLogger(MenuControl.class);
-	Control control_ = new Control();
+
+	private final Control control_;
+
+	@Autowired
+	public MenuControl(Control control) {
+		this.control_ = control;
+	}
+
+	//endregion
+
+
+	//region 메뉴 관리 기능
 
 	//메뉴 저장버튼
 	@PostMapping("/insert-menu")
@@ -159,5 +190,7 @@ class MenuControl {
 
 		return ResponseEntity.ok(menu.toString());
 	}
+
+	//endregion
 
 }

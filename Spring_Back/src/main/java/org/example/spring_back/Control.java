@@ -6,22 +6,31 @@ import org.example.spring_back.Menu.Menu;
 import org.example.spring_back.Metho_Code.M_Code;
 import org.example.spring_back.Metho_Code.MenuControl.MenuControl;
 import org.example.spring_back.User.User_Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 
+@Service
 public class Control {
 
-    M_Code code_ = new M_Code();
-    MenuControl menuControl_ = new MenuControl();
+    //M_Code code_ = new M_Code();
+    private final M_Code code_;
+    private final MenuControl menuControl_;
+
+    public Control(M_Code code_, MenuControl menuControl_) {
+        this.code_ = code_;
+        this.menuControl_ = menuControl_;
+    }
+
 
     //region 회원가입 & 로그인
 
     //회원가입 기능
-    public String createUser(User_Data temp){
+    public User_Data createUser(User_Data temp){
         User_Data req = code_.createUser(temp);
 
-        if(req != null){ return "성공"; }
-        else {return "false";}
+        return req;
     }
 
     //로그인 인증
