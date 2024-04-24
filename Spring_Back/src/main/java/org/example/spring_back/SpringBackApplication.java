@@ -14,12 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.spring_back.User.User_Data;
-import org.springframework.web.multipart.MultipartFile;
+
 
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @SpringBootApplication
 public class SpringBackApplication {
@@ -70,7 +70,7 @@ class AdminController {
 
 	//로그인 EndPoint
 	@PostMapping("/login")
-	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
 
 		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
 
@@ -113,11 +113,12 @@ class AdminController {
 	//아이디 찾기 EndPoint
 	@PutMapping("/findid")
 	public ResponseEntity<?> findUser(@RequestBody User_Data user) {
-
-		String emailValue = user.getUserEmail();
+		//이메일 기준으로 아이디 찾기
+		
+		String EmailValue = user.getUserEmail();
 
 		try{
-			String result = control_.findUser(emailValue);
+			String result = control_.findUser(EmailValue);
 			if(result != null) {
 				logger.info("findUser operation was success");
 				return ResponseEntity.ok("User PW : " + result);
@@ -128,6 +129,7 @@ class AdminController {
 			}
 		}
 		catch(Exception e) {
+			logger.error("An error occurred during the findUser operation : {}", e);
 			return ResponseEntity.badRequest().body(null);
 		}
 
@@ -137,7 +139,22 @@ class AdminController {
 	//비밀번호 찾기 EndPoint
 	@PutMapping("/findPw")
 	public ResponseEntity<String> findPw(@RequestBody User_Data user) {
-		return ResponseEntity.ok("user");
+		
+		
+		String value = user.getUserPw();
+		try{
+			String result = control_.findPW(value);
+			if(result != null) {
+				logger.info("findPw operation was success");
+				return ResponseEntity.ok("PW : " + result);
+			}
+			else { logger.info("findPw operation was failed"); throw new Exception(); }
+		}
+		catch(Exception e) {
+			logger.error("An error occurred during the findPw operation : {}", e);
+			return ResponseEntity.badRequest().body(null);
+		}
+
 	}
 
 	//endregion
@@ -173,7 +190,7 @@ class MenuControl {
 
 		try{
 			Boolean insert_Result = control_.Insert_Menu(menuDataDTO);
-			if(insert_Result == false){
+			if(!insert_Result){
 				throw new Exception();
 			}
 			logger.info("insertMenu operation was success");

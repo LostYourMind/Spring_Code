@@ -48,9 +48,14 @@ public class Control {
     }
 
     //아이디 찾기 기능
-    public String findUser(String userEmail){
+    public String findUser(String useridValue){
 
-        String temp = code_.findUser(userEmail);
+        String temp = code_.findUser(useridValue);
+        return temp;
+    }
+
+    public String findPW(String useridValue){
+        String temp = code_.findUser_PW(useridValue);
         return temp;
     }
 

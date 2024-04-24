@@ -24,5 +24,11 @@ public interface UserRepository extends JpaRepository<User_Data, String> {
     @Procedure(name = "LoginUser")
     boolean loginUser(@Param("userid") String userid, @Param("pass_W") String password);
 
+    @Procedure(name = "FindUserID")
+    void findUserID(@Param("input_Email") String input_Email);
+
+    @Procedure(name = "FindUserPW")
+    void findUserPW(@Param("inputuser_ID") String inputuser_ID);
+
 
 }

@@ -19,6 +19,8 @@ import org.example.spring_back.User.User_Data;
 @Service
 public class M_Code {
 
+    //region 맴버필드 & 생성자
+
     private final UserRepository userRepository;
     private final Logger logger = LogManager.getLogger(M_Code.class);
 
@@ -30,6 +32,8 @@ public class M_Code {
         this.userRepository = userRepository;
         this.entityManager = entityManager;
     }
+
+    //endregion
 
     //region 회원 관리 기능
 
@@ -67,12 +71,26 @@ public class M_Code {
         return result != null && result;
     }
 
-    
     //사람 찾아버리는 기능
-    public String findUser(String UserEmail){
-        //찾아버려!!!기능 넣어줘
-        return "5678";
+    public String findUser(String useridValue){
+        //email 값을 가지고 id 값 찾기
+
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("FindUserID");
+        query.registerStoredProcedureParameter("input_Email", String.class, jakarta.persistence.ParameterMode.IN);
+        query.setParameter("input_Email", useridValue);
+
+        query.execute();
+        return (String) query.getSingleResult();  // 결과는 단일 userID 반환
     }
 
+
+    public String findUser_PW(String useridValue){
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("FindUserPW");
+        query.registerStoredProcedureParameter("inputuser_ID", String.class, jakarta.persistence.ParameterMode.IN);
+        query.setParameter("inputuser_ID", useridValue);
+
+        query.execute();
+        return (String) query.getSingleResult();  // 결과는 단일 userID 반환
+    }
     //endregion
 }
