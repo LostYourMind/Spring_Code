@@ -188,6 +188,8 @@ class MenuControl {
 	@PostMapping("/insert-menu")
 	public ResponseEntity<?> insertMenu(@RequestBody Menu menuDataDTO) {
 
+		logger.info("testtest {} ", menuDataDTO);
+
 		try{
 			Boolean insert_Result = control_.Insert_Menu(menuDataDTO);
 			if(!insert_Result){

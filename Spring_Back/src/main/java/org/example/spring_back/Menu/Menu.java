@@ -1,11 +1,16 @@
 package org.example.spring_back.Menu;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class Menu {
     private Info info;
-    private List<Category> data;
 
-    // getters and setters for info
+    // JSON의 'data' 키에 매핑되는 필드로 변경하고,
+    // 'category' 키 내부의 'categoryName' 키에 해당하는 필드에 대해 처리합니다.
+    @JsonProperty("data")
+    private List<Category> categories;
+
+    // Getters and Setters
     public Info getInfo() {
         return info;
     }
@@ -14,21 +19,21 @@ public class Menu {
         this.info = info;
     }
 
-    // getters and setters for data
-    public List<Category> getData() {
-        return data;
+    public List<Category> getCategories() {
+        return categories;
     }
 
-    public void setData(List<Category> data) {
-        this.data = data;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
+    // Info Inner Class
     public static class Info {
         private String name;
         private String address;
         private String type;
 
-        // getters and setters for name
+        // Getters and Setters for Info
         public String getName() {
             return name;
         }
@@ -37,7 +42,6 @@ public class Menu {
             this.name = name;
         }
 
-        // getters and setters for address
         public String getAddress() {
             return address;
         }
@@ -46,7 +50,6 @@ public class Menu {
             this.address = address;
         }
 
-        // getters and setters for type
         public String getType() {
             return type;
         }
@@ -56,30 +59,44 @@ public class Menu {
         }
     }
 
+    // Category Inner Class
     public static class Category {
-        private CategoryName category;
-        private List<Product> product;
+        // 'category' JSON 객체 내부의 'categoryName' 필드에 해당하는 키에 매핑됩니다.
+        @JsonProperty("categoryName")
+        private String categoryName;
 
-        public CategoryName getCategory() {return category;}
-        public void setCategory(CategoryName category) {this.category = category;}
+        // 'product' JSON 배열에 매핑되는 필드로 변경합니다.
+        @JsonProperty("product")
+        private List<Product> products;
 
-        public List<Product> getProduct() { return product; }
-        public void setProduct(List<Product> product) { this.product = product; }
+        // Getters and Setters for Category
+        public String getCategoryName() {
+            return categoryName;
+        }
 
-        public static class CategoryName {
-            private String categoryName;
+        public void setCategoryName(String categoryName) {
+            this.categoryName = categoryName;
+        }
 
-            public String getCategoryName() { return categoryName; }
-            public void setCategoryName(String categoryName) {this.categoryName = categoryName;}
+        public List<Product> getProducts() {
+            return products;
+        }
+
+        public void setProducts(List<Product> products) {
+            this.products = products;
         }
     }
 
+    // Product Inner Class
     public static class Product {
         private String name;
-        private String price;
-        private String image; // 이미지 데이터가 Base64 문자열로 전송되는 것을 가정합니다.
+        private Integer price;
 
-        // getters and setters for name
+        // JSON 'image' 키의 값을 Base64 문자열로 받는 필드입니다.
+        @JsonProperty("image")
+        private String imageBase64;
+
+        // Getters and Setters for Product
         public String getName() {
             return name;
         }
@@ -88,22 +105,20 @@ public class Menu {
             this.name = name;
         }
 
-        // getters and setters for price
-        public String getPrice() {
+        public Integer getPrice() {
             return price;
         }
 
-        public void setPrice(String price) {
+        public void setPrice(Integer price) {
             this.price = price;
         }
 
-        // getters and setters for image
-        public String getImage() {
-            return image;
+        public String getImageBase64() {
+            return imageBase64;
         }
 
-        public void setImage(String image) {
-            this.image = image;
+        public void setImageBase64(String imageBase64) {
+            this.imageBase64 = imageBase64;
         }
     }
 }
