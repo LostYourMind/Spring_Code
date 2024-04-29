@@ -20,7 +20,6 @@ public interface UserRepository extends JpaRepository<User_Data, String> {
     @Query(value = "INSERT INTO user (userId, pw, name, email) VALUES (?1, ?2, ?3, ?4)", nativeQuery = true)
     void insertUser(String userId, String password, String name, String email);
 
-
     @Procedure(name = "LoginUser")
     boolean loginUser(@Param("userid") String userid, @Param("pass_W") String password);
 

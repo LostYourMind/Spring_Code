@@ -189,7 +189,7 @@ class MenuControl {
 	@PostMapping("/insert-menu")
 	public ResponseEntity<?> insertMenu(@RequestBody Menu menuDataDTO) {
 
-		logger.info("testtest {} ", menuDataDTO);
+		logger.info("insertMenu Start {} ", menuDataDTO);
 
 		try{
 			Boolean insert_Result = control_.Insert_Menu(menuDataDTO);
@@ -206,11 +206,33 @@ class MenuControl {
 
 	//메뉴 삭제
 	@DeleteMapping("/del-menu")
-	public ResponseEntity<String> Delete_Menu(@RequestBody List<Menu> menu) {
+	public ResponseEntity<String> deleteMenu(@RequestBody List<Menu> menu) {
 
 		return ResponseEntity.ok(menu.toString());
 	}
 
+
+	//메뉴 전체 출력
+	@PostMapping("/menulist")
+	public ResponseEntity<?> menuListAll(@RequestBody String userID) {
+
+		logger.info("User {} Request menuListALL : Start ", userID);
+
+		try{
+			Boolean test = control_.menuGetList(userID);
+			if(test == null){
+				throw new Exception();
+			}
+			logger.info("menuListAll Finish");
+			return ResponseEntity.ok("Test");
+		}catch (Exception e){
+			return ResponseEntity.badRequest().body(null);
+		}
+
+
+
+
+	}
 	//endregion
 
 }

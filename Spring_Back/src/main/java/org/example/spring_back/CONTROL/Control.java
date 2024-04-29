@@ -71,6 +71,13 @@ public class Control {
         return insert_result;
     }
 
+    public Boolean menuGetList(String useridValue){
+
+        Boolean result = menuControl_.menuGetList(useridValue);
+
+        return result;
+    }
+
 
     //endregion
 
