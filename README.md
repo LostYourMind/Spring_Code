@@ -25,3 +25,5 @@
 😷 구현해야 할 내용 😷
  메뉴 삭제
  
+파일 구조
+![image](https://github.com/LostYourMind/Spring_Code/assets/42758008/fb42f83d-5634-4c59-a87b-4fae807106c5)
