@@ -1,4 +1,4 @@
-package org.example.spring_back.Repository_Interface;
+package org.example.spring_back.Repository_Interface.UserRepo;
 
 import jakarta.transaction.Transactional;
 import org.example.spring_back.DTOFILE.User.User_Data;

@@ -67,7 +67,7 @@ public class Control {
     //메뉴 등록
     public Boolean Insert_Menu(Menu menuDataDTO){
 
-        Boolean insert_result = menuControl_.Insert_Menu(menuDataDTO);
+        Boolean insert_result = menuControl_.insertMenu(menuDataDTO);
         return insert_result;
     }
 
