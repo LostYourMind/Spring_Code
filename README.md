@@ -33,11 +33,17 @@
 👓 파일 설명 👓
 
 SpringBackApplication -> 메인 어플리케이션 (AdminController -> 회원 관리 기능) (MenuControl -> 메뉴 관리 기능)
+
 Control -> 컨트롤 파일 (기능 연결)
+
 Metho_Code(DIR) => M_Code -> 회원 관리 기능 관련 처리 코드(모델 코드)
+
 Metho_Code(DIR) => MenuControl(DIR) => MenuControl -> 메뉴 관리 기능 관련 처리 코드(모델 코드)
+
 config(DIR) => WebConfig -> CORS관련 처리
+
 resources(DIR) => application.properties- -> 서버 설정(포트 설정 & DB 연동 설정)
+
 
 
 🗃 DB 연동 방법 🗃
