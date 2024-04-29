@@ -49,8 +49,12 @@ resources(DIR) => application.properties- -> 서버 설정(포트 설정 & DB �
 🗃 DB 연동 방법 🗃
 
 spring.datasource.url=jdbc:mysql://localhost:포트/DB이름?useSSL=false
+
 spring.datasource.username=아이디
+
 spring.datasource.password=비밀번호
+
 spring.jpa.hibernate.ddl-auto=update
+
 spring.jpa.show-sql=true
 
