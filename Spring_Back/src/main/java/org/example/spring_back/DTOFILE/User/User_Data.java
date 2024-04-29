@@ -60,10 +60,9 @@ public class User_Data {
 }
 */
 
-package org.example.spring_back.User;
+package org.example.spring_back.DTOFILE.User;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 
 @Entity
 @Table(name = "user")

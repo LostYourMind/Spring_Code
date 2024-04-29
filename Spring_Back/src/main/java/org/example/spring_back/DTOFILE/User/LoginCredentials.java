@@ -1,4 +1,4 @@
-package org.example.spring_back.User;
+package org.example.spring_back.DTOFILE.User;
 
 public class LoginCredentials {
 

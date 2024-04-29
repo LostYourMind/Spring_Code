@@ -1,4 +1,4 @@
-package org.example.spring_back.Menu;
+package org.example.spring_back.DTOFILE.Menu;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 

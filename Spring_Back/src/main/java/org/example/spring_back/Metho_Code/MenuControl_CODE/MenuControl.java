@@ -1,9 +1,9 @@
-package org.example.spring_back.Metho_Code.MenuControl;
+package org.example.spring_back.Metho_Code.MenuControl_CODE;
 
-import org.example.spring_back.Menu.Menu;
-import org.example.spring_back.Menu.Menu.Info;
-import org.example.spring_back.Menu.Menu.Category;
-import org.example.spring_back.Menu.Menu.Product;
+import org.example.spring_back.DTOFILE.Menu.Menu;
+import org.example.spring_back.DTOFILE.Menu.Menu.Info;
+import org.example.spring_back.DTOFILE.Menu.Menu.Category;
+import org.example.spring_back.DTOFILE.Menu.Menu.Product;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,11 +35,11 @@ public class MenuControl {
                 logger.info("Product Price: {}", product.getPrice());
 
                 // Handle Base64 encoded image string if present
-               /* String base64Image = product.getImageBase64();
+                String base64Image = product.getImageBase64();
                 if (base64Image != null && !base64Image.trim().isEmpty()) {
                     // Convert Base64 encoded string to image file or save to database
                     // The actual implementation will depend on your specific requirements
-                }*/
+                }
             }
         }
 

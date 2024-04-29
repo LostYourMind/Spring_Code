@@ -1,12 +1,11 @@
 //Control.java
 
-package org.example.spring_back;
+package org.example.spring_back.CONTROL;
 
-import org.example.spring_back.Menu.Menu;
-import org.example.spring_back.Metho_Code.M_Code;
-import org.example.spring_back.Metho_Code.MenuControl.MenuControl;
-import org.example.spring_back.User.User_Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.spring_back.DTOFILE.Menu.Menu;
+import org.example.spring_back.Metho_Code.UserControl_CODE.M_Code;
+import org.example.spring_back.Metho_Code.MenuControl_CODE.MenuControl;
+import org.example.spring_back.DTOFILE.User.User_Data;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;

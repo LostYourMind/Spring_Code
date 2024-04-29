@@ -1,6 +1,6 @@
 //M_Code.java
 
-package org.example.spring_back.Metho_Code;
+package org.example.spring_back.Metho_Code.UserControl_CODE;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.example.spring_back.Repository_Interface.UserRepository;
 
-import org.example.spring_back.User.User_Data;
+import org.example.spring_back.DTOFILE.User.User_Data;
 
 
 @Service

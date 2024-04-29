@@ -1,7 +1,7 @@
 package org.example.spring_back.Repository_Interface;
 
 import jakarta.transaction.Transactional;
-import org.example.spring_back.User.User_Data;
+import org.example.spring_back.DTOFILE.User.User_Data;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
