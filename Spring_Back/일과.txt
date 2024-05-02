@@ -1,4 +1,5 @@
 현재 처리중인 문제
-1. categoryName 값을 못받음. -> 나머지 값은 다 받는데, categoryName 값이 없으면 Product를 DB에 저장하는게 불가
+1. categoryName 값을 못받음. -> 나머지 값은 다 받는데, categoryName 값이 없으면 Product를 DB에 저장하는게 불가 = 해결
+    1-1. DB 저장 부분 테스트
 2. 로그인 세션 문제
 

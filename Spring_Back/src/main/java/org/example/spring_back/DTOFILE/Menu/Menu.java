@@ -150,15 +150,15 @@ public class Menu {
     private List<Category> categories;
 
     @JsonProperty("kioskId")
-    private Integer KioskID;
+    private String KioskID;
 
     //region 키오스크 ID
 
-    public Integer getKioskID() {
+    public String getKioskID() {
         return KioskID;
     }
 
-    public void setKioskID(Integer kioskID) {
+    public void setKioskID(String kioskID) {
         KioskID = kioskID;
     }
 

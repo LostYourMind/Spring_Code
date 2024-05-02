@@ -19,7 +19,6 @@ import org.example.spring_back.DTOFILE.User.User_Data;
 
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -192,7 +191,7 @@ class MenuControl {
 		logger.info("insertMenu Start {} ", menuDataDTO);
 
 		try{
-			Boolean insert_Result = control_.Insert_Menu(menuDataDTO);
+			Boolean insert_Result = control_.Con_Insert_Menu(menuDataDTO);
 			if(!insert_Result){
 				throw new Exception();
 			}
@@ -203,12 +202,11 @@ class MenuControl {
 	}
 
 
-
 	//메뉴 삭제
 	@DeleteMapping("/del-menu")
-	public ResponseEntity<String> deleteMenu(@RequestBody List<Menu> menu) {
+	public ResponseEntity deleteMenu(@RequestBody String cName, String pName) {
 
-		return ResponseEntity.ok(menu.toString());
+		return (ResponseEntity) ResponseEntity.ok();
 	}
 
 

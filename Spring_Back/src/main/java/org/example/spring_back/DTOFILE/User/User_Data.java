@@ -63,6 +63,10 @@ public class User_Data {
 package org.example.spring_back.DTOFILE.User;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.example.spring_back.DTOFILE.Menu.KioskEntity;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -84,7 +88,6 @@ public class User_Data {
     @Column(name = "email")
     @JsonProperty("email")
     private String user_Email;
-
 
     //region get & set Method
 

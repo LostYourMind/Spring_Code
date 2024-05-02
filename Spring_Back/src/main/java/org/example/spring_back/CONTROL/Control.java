@@ -65,10 +65,16 @@ public class Control {
     //region 메뉴 관리
 
     //메뉴 등록
-    public Boolean Insert_Menu(Menu menuDataDTO){
+    public Boolean Con_Insert_Menu(Menu menuDataDTO){
 
         Boolean insert_result = menuControl_.insertMenu(menuDataDTO);
         return insert_result;
+    }
+
+    //메뉴 삭제
+    public Boolean Con_Delete_Menu(String cName, String pName){
+        boolean delete_result = menuControl_.deleteMenu(cName, pName);
+        return delete_result;
     }
 
     public Boolean menuGetList(String useridValue){

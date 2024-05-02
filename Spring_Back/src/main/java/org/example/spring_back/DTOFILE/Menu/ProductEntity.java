@@ -23,7 +23,7 @@ public class ProductEntity {
     private String image;
 
     @Column(nullable = false)
-    private String price;
+    private Integer price;
 
     //endregion
 
@@ -34,7 +34,7 @@ public class ProductEntity {
     }
 
     // 모든 필드를 매개변수로 하는 생성자
-    public ProductEntity(String categoryName, String name, String image, String price) {
+    public ProductEntity(String categoryName, String name, String image, int price) {
         this.categoryName = categoryName;
         this.name = name;
         this.image = image;
@@ -78,11 +78,11 @@ public class ProductEntity {
         this.image = image;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
