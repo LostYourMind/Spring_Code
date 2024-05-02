@@ -14,4 +14,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
     @Modifying
     @Query(value = "INSERT INTO category (kioskId, categoryName) VALUES (?1, ?2)", nativeQuery = true)
     int insertCategoryInfo(String kioskId, String categoryName);
+
+
+
 }

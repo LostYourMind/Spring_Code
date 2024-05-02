@@ -1,11 +1,9 @@
 package org.example.spring_back.Metho_Code.MenuControl_CODE;
 
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.spring_back.DTOFILE.Menu.*;
 import org.example.spring_back.Repository_Interface.MenuRepo.StoreInfoRepository;
-import org.example.spring_back.Repository_Interface.UserRepo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +20,10 @@ public class MenuControl {
     //region 맴버필드 & 생성자
 
     private final Logger logger = LogManager.getLogger(MenuControl.class);
-    Insert_DB insert_db;
+    DB_Model db_Model;
 
-    public MenuControl(Insert_DB insert_db){
-        this.insert_db = insert_db;
+    public MenuControl(DB_Model insert_db){
+        this.db_Model = insert_db;
     }
 
     //endregion
@@ -34,11 +32,11 @@ public class MenuControl {
     //메뉴 저장
     public Boolean insertMenu(Menu menuData){
         try{
-            String kioskid = insert_db.insertKioskIDandInfo(menuData);
+            String kioskid = db_Model.insertKioskIDandInfo(menuData);
 
             if(kioskid != null){
-                Boolean result = insert_db.insertCateAndProduct(kioskid, menuData);
-                if(result == true){
+                Boolean result = db_Model.insertCateAndProduct(kioskid, menuData);
+                if(result){
                     return true;
                 }
                 else throw new Exception("DB 저장 오류(Category + Product");
@@ -52,7 +50,7 @@ public class MenuControl {
 
     //메뉴 삭제
     public Boolean deleteMenu(String cName, String pName){
-        return true;
+        return db_Model.deleteProduct(cName, pName);
     }
 
     //메뉴 전체 출력
@@ -61,10 +59,11 @@ public class MenuControl {
 
         return true;
     }
+
 }
 
 @Service
-class Insert_DB{
+class DB_Model {
 
     //region 맴버필드 & 생성자
 
@@ -74,10 +73,9 @@ class Insert_DB{
     private final StoreInfoRepository storeRepository;
 
     private final Logger logger = LogManager.getLogger(MenuControl.class);
-    private Menu menuData;
 
     @Autowired
-    public Insert_DB(KioskRepository kioskRepository, CategoryRepository categoryRepository, ProductRepository productRepository, StoreInfoRepository storeRepository) {
+    public DB_Model(KioskRepository kioskRepository, CategoryRepository categoryRepository, ProductRepository productRepository, StoreInfoRepository storeRepository) {
         this.kioskRepository = kioskRepository;
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
@@ -95,7 +93,7 @@ class Insert_DB{
         logger.info("Kiosk ID: {}", kioskId);
 
         Info info = menuData.getInfo();
-        StoreInfoEntity storeEntity = null;
+        StoreInfoEntity storeEntity;
         storeEntity = new StoreInfoEntity();
         if (info != null) {
             logger.info("Info Name: {}", info.getName());
@@ -124,7 +122,7 @@ class Insert_DB{
 
     public Boolean insertCateAndProduct(String kioskId, Menu menuData){
 
-        int resultProduct = 0, resultCategory = 0;
+        int resultProduct = 0, resultCategory;
 
         try{
             for (Menu.Category categoryDto : menuData.getCategories()) {
@@ -164,5 +162,18 @@ class Insert_DB{
         return false;
     }
 
-        
+    public boolean deleteProduct(String cName, String pName){
+        try{
+            int result = productRepository.deleteProduct(cName, pName);
+            if(result > 0){
+                logger.info("Successfully delete product {}",pName);
+                return true;
+            }
+            else throw new Exception();
+        }
+        catch(Exception e){
+            logger.error(e);
+            return false;
+        }
+    }
 }
