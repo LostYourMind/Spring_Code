@@ -9,6 +9,7 @@ import org.example.spring_back.DTOFILE.User.User_Data;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class Control {
@@ -77,11 +78,9 @@ public class Control {
         return delete_result;
     }
 
-    public Boolean menuGetList(String useridValue){
+    public List<Object[]> menuGetList(String useridValue){
 
-        Boolean result = menuControl_.menuGetList(useridValue);
-
-        return result;
+        return menuControl_.menuGetList(useridValue);
     }
 
 

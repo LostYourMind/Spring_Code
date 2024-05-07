@@ -19,6 +19,7 @@ import org.example.spring_back.DTOFILE.User.User_Data;
 
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 
 @SpringBootApplication
@@ -163,7 +164,6 @@ class AdminController {
 }
 
 
-
 //관리자 메뉴 관련 기능
 @RestController
 class MenuControl {
@@ -211,26 +211,33 @@ class MenuControl {
 
 
 	//메뉴 전체 출력
-	@PostMapping("/menulist")
-	public ResponseEntity<?> menuListAll(@RequestBody String userID) {
+	@PostMapping("/user")
+	public ResponseEntity<?> menuListAll(@RequestBody User_Data userID) {
 
-		logger.info("User {} Request menuListALL : Start ", userID);
-
+		logger.info("User {} Request : [menuListALL] is Start ", userID);
+		String temp = userID.getUserId();
 		try{
-			Boolean test = control_.menuGetList(userID);
+			List<Object[]> test = control_.menuGetList(temp);
 			if(test == null){
 				throw new Exception();
 			}
-			logger.info("menuListAll Finish");
-			return ResponseEntity.ok("Test");
+			logger.info("User {} Request [menuListAll] is Finish", userID);
+			return ResponseEntity.ok(test);
 		}catch (Exception e){
 			return ResponseEntity.badRequest().body(null);
 		}
 
-
-
-
 	}
 	//endregion
+
+}
+
+@RestController
+class UserPage{
+
+	private final Logger logger = LogManager.getLogger(UserPage.class);
+
+
+
 
 }

@@ -13,6 +13,8 @@ import org.example.spring_back.Repository_Interface.MenuRepo.CategoryRepository;
 import org.example.spring_back.Repository_Interface.MenuRepo.KioskRepository;
 import org.example.spring_back.Repository_Interface.MenuRepo.ProductRepository;
 
+import java.util.List;
+
 
 @Service("MainMenuControl")
 public class MenuControl {
@@ -54,10 +56,10 @@ public class MenuControl {
     }
 
     //메뉴 전체 출력
-    public Boolean menuGetList(String useridValue){
+    public List<Object[]> menuGetList(String userId){
         //메뉴 전체 출력하는 로직 생성 필요
 
-        return true;
+        return db_Model.GetKioskList(userId);
     }
 
 }
@@ -175,5 +177,9 @@ class DB_Model {
             logger.error(e);
             return false;
         }
+    }
+
+    public List<Object[]> GetKioskList(String userId){
+        return kioskRepository.SelectAllKiosk(userId);
     }
 }

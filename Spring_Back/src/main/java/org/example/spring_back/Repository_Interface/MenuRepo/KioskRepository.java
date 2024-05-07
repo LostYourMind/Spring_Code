@@ -6,7 +6,11 @@ import org.example.spring_back.DTOFILE.Menu.KioskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 @Repository
@@ -16,4 +20,9 @@ public interface KioskRepository extends JpaRepository<KioskEntity, String> {
     @Modifying
     @Query(value = "INSERT INTO kiosk (kioskId, userID) VALUES (?1, ?2)", nativeQuery = true)
     int insertKioskInfo(String kioskId, String userID);
+
+
+    // 스토어드 프로시저 호출
+    @Procedure(name = "SelectAllKiosk")
+    List<Object[]> SelectAllKiosk(@Param("user_id") String userId);
 }

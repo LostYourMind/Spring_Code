@@ -17,8 +17,8 @@ public interface UserRepository extends JpaRepository<User_Data, String> {
     // 사용자 정의 삽입 쿼리
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO user (userId, pw, name, email) VALUES (?1, ?2, ?3, ?4)", nativeQuery = true)
-    void insertUser(String userId, String password, String name, String email);
+    @Query(value = "INSERT INTO user (userId, pw, name, email) VALUES (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
+    int insertUser(String userId, String password, String name, String email, String user_id);
 
     @Procedure(name = "LoginUser")
     boolean loginUser(@Param("userid") String userid, @Param("pass_W") String password);

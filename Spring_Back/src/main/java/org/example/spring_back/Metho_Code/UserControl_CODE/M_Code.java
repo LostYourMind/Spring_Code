@@ -43,7 +43,8 @@ public class M_Code {
 
         logger.trace("Start createUser");
 
-        String userId = user.getUserId();
+        String userId= user.getUserId();
+        String userfk_id = user.getUserId();
         String password = user.getUserPw();
         String name = user.getUserName();
         String email = user.getUserEmail();
@@ -51,10 +52,11 @@ public class M_Code {
 
         logger.info("{} {} {} {}", userId, password, name, email);
 
-        userRepository.insertUser(userId, password, name, email);
-
-        logger.info("Finish createUser");
-        return user;
+        int createUser_Result = userRepository.insertUser(userId, password, name, email, userfk_id);
+        if(createUser_Result == 1){
+            logger.info("success Create User : {}", userId);
+            return user;
+        }else return null;
     }
 
     //로그인 기능
