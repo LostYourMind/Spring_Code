@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.spring_back.CONTROL.Control;
 import org.example.spring_back.DTOFILE.Menu.Menu;
+import org.example.spring_back.DTOFILE.User.InfoRe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -68,7 +69,7 @@ class AdminController {
 			return ResponseEntity.badRequest().body(false); // HTTP 400 with false
 		}
 	}
-
+/*
 	//로그인 EndPoint
 	@PostMapping("/login")
 	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
@@ -91,7 +92,41 @@ class AdminController {
 			logger.error("An error occurred during the login operation", e);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
 		}
+	}*/
+
+	//로그인 EndPoint
+	@PostMapping("/login")
+	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
+
+		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
+
+		String user_id = credentials.get("loginId");
+		boolean result = control_.AuthenticateUser(login_Req);
+		try {
+			if (result) {
+				HttpSession session = request.getSession(true);  // 새로운 세션을 생성하거나 기존 세션을 가져옵니다.
+				session.setAttribute("username", user_id);       // 항상 사용자 ID를 세션에 저장합니다.
+				logger.info("Login operation was successful: {}", session.getId());
+				return ResponseEntity.ok("Login successful");
+			} else {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+			}
+		} catch (Exception e) {
+			logger.error("An error occurred during the login operation", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed");
+		}
 	}
+
+	@GetMapping("/info")
+	public ResponseEntity<?> test(HttpServletRequest request) {
+		InfoRe test = new InfoRe();
+
+		test.setLoginId("2222");
+		test.setUserName("이종혁");
+
+		return ResponseEntity.ok(test);
+	}
+
 
 	//로그아웃 EndPoint
 	@PostMapping("/logout")
@@ -159,7 +194,6 @@ class AdminController {
 	}
 
 	//endregion
-
 
 }
 
@@ -231,6 +265,7 @@ class MenuControl {
 	//endregion
 
 }
+
 
 @RestController
 class UserPage{
