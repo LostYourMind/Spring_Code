@@ -3,6 +3,7 @@ package org.example.spring_back.Repository_Interface.MenuRepo;
 
 import jakarta.transaction.Transactional;
 import org.example.spring_back.DTOFILE.Menu.KioskEntity;
+import org.example.spring_back.DTOFILE.Menu.KioskInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

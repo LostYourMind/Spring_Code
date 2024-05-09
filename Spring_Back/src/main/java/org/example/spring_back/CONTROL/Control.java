@@ -2,6 +2,7 @@
 
 package org.example.spring_back.CONTROL;
 
+import org.example.spring_back.DTOFILE.Menu.KioskInfo;
 import org.example.spring_back.DTOFILE.Menu.Menu;
 import org.example.spring_back.Metho_Code.UserControl_CODE.M_Code;
 import org.example.spring_back.Metho_Code.MenuControl_CODE.MenuControl;
@@ -79,7 +80,6 @@ public class Control {
     }
 
     public List<Object[]> menuGetList(String useridValue){
-
         return menuControl_.menuGetList(useridValue);
     }
 

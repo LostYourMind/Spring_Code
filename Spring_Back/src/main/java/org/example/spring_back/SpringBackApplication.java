@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.spring_back.CONTROL.Control;
+import org.example.spring_back.DTOFILE.Menu.KioskInfo;
 import org.example.spring_back.DTOFILE.Menu.Menu;
 import org.example.spring_back.DTOFILE.User.InfoRe;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,30 +70,7 @@ class AdminController {
 			return ResponseEntity.badRequest().body(false); // HTTP 400 with false
 		}
 	}
-/*
-	//로그인 EndPoint
-	@PostMapping("/login")
-	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
 
-		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
-
-		String user_id = credentials.get("loginId");
-		HttpSession session;
-		boolean result = control_.AuthenticateUser(login_Req);
-		try{
-			if (result) {
-				session = request.getSession(true); // 현재 세션을 반환하거나 없으면 새 세션 생성
-				if (session.isNew()) {
-					session.setAttribute("username", user_id); // 세션에 사용자 이름 저장
-				}
-				logger.info("login operation was success : {}",session.getId());
-			}
-			return ResponseEntity.ok("Login successful");
-		}catch(Exception e) {
-			logger.error("An error occurred during the login operation", e);
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
-		}
-	}*/
 
 	//로그인 EndPoint
 	@PostMapping("/login")
@@ -245,7 +223,7 @@ class MenuControl {
 
 
 	//메뉴 전체 출력
-	@PostMapping("/user")
+	@PostMapping("/menulist")
 	public ResponseEntity<?> menuListAll(@RequestBody User_Data userID) {
 
 		logger.info("User {} Request : [menuListALL] is Start ", userID);

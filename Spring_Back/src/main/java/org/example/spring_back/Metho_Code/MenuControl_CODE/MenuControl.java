@@ -1,5 +1,6 @@
 package org.example.spring_back.Metho_Code.MenuControl_CODE;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.spring_back.DTOFILE.Menu.*;
@@ -87,6 +88,9 @@ class DB_Model {
 
     //endregion
 
+
+    //region Insert Method
+
     public String insertKioskIDandInfo(Menu menuData){
         logger.trace("Start Insert Menu");
 
@@ -164,6 +168,11 @@ class DB_Model {
         return false;
     }
 
+    //endregion
+
+
+    //region Delete Method
+
     public boolean deleteProduct(String cName, String pName){
         try{
             int result = productRepository.deleteProduct(cName, pName);
@@ -179,7 +188,20 @@ class DB_Model {
         }
     }
 
+    //endregion
+
+    @Transactional(readOnly = false)  // 읽기 전용 트랜잭션 설정
     public List<Object[]> GetKioskList(String userId){
-        return kioskRepository.SelectAllKiosk(userId);
+        logger.info("Start GetKioskList / userId: {}", userId);
+        try{
+            List<Object[]> kioskList = kioskRepository.SelectAllKiosk(userId);
+            logger.info("Kiosk List: {}", kioskList);
+            return kioskList;
+        }
+        catch(Exception e){
+
+            logger.error(e);
+            return null;
+        }
     }
 }
