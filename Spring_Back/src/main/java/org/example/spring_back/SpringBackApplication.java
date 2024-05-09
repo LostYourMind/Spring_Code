@@ -223,7 +223,7 @@ class MenuControl {
 
 
 	//메뉴 전체 출력
-	@PostMapping("/menulist")
+	@PostMapping("/user")
 	public ResponseEntity<?> menuListAll(@RequestBody User_Data userID) {
 
 		logger.info("User {} Request : [menuListALL] is Start ", userID);
