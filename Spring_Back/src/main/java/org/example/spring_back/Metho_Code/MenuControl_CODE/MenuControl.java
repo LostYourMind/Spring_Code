@@ -14,6 +14,10 @@ import org.example.spring_back.Repository_Interface.MenuRepo.CategoryRepository;
 import org.example.spring_back.Repository_Interface.MenuRepo.KioskRepository;
 import org.example.spring_back.Repository_Interface.MenuRepo.ProductRepository;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -87,7 +91,6 @@ class DB_Model {
     }
 
     //endregion
-
 
     //region Insert Method
 
@@ -170,7 +173,6 @@ class DB_Model {
 
     //endregion
 
-
     //region Delete Method
 
     public boolean deleteProduct(String cName, String pName){
@@ -190,6 +192,7 @@ class DB_Model {
 
     //endregion
 
+
     @Transactional(readOnly = false)  // 읽기 전용 트랜잭션 설정
     public List<Object[]> GetKioskList(String userId){
         logger.info("Start GetKioskList / userId: {}", userId);
@@ -204,4 +207,49 @@ class DB_Model {
             return null;
         }
     }
+
+
+//
+//    @Transactional(readOnly = false)  // 읽기 전용 트랜잭션 설정
+//    public List<Object[]> GetKioskList(String userId){
+//        logger.info("Start GetKioskList / userId: {}", userId);
+//        try {
+//            List<Object[]> kioskList = kioskRepository.SelectAllKiosk(userId);
+//            kioskList.forEach(item -> {
+//                String base64Image = (String) item[7]; // 인덱스 7은 Base64 이미지 데이터를 가정
+//                if (base64Image.startsWith("data:image")) {
+//                    try {
+//                        byte[] imageBytes = decodeBase64ToImage(base64Image);
+//                        // 이미지를 파일로 저장 (예: userId를 파일 이름으로 사용)
+//                        saveImage(imageBytes, "output_" + userId + ".png");
+//                    } catch (Exception e) {
+//                        logger.error("Image processing error: ", e);
+//                    }
+//                }
+//            });
+//            logger.info("Kiosk List: {}", kioskList);
+//            return kioskList;
+//        } catch(Exception e) {
+//            logger.error("Error in GetKioskList: ", e);
+//            return null;
+//        }
+//    }
+//
+//    private byte[] decodeBase64ToImage(String base64Image) {
+//        String imageDataBytes = base64Image.substring(base64Image.indexOf(",") + 1);
+//        return Base64.getDecoder().decode(imageDataBytes);
+//    }
+//
+//    private void saveImage(byte[] imageBytes, String filename) throws Exception {
+//        String directoryPath = "";  // 이미지를 저장할 디렉토리 경로
+//        File directory = new File(directoryPath);
+//        if (!directory.exists()) {
+//            directory.mkdirs();  // 디렉토리가 존재하지 않는 경우, 디렉토리 생성
+//        }
+//
+//        File outputFile = new File(directory, filename);  // 파일 경로 조합
+//        try (OutputStream out = new FileOutputStream(outputFile)) {
+//            out.write(imageBytes);
+//        }
+//    }
 }

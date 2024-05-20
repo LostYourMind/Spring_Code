@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.spring_back.CONTROL.Control;
-import org.example.spring_back.DTOFILE.Menu.KioskInfo;
 import org.example.spring_back.DTOFILE.Menu.Menu;
 import org.example.spring_back.DTOFILE.User.InfoRe;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.spring_back.DTOFILE.User.User_Data;
-
 
 
 import java.util.LinkedHashMap;
@@ -197,7 +195,7 @@ class MenuControl {
 	//region 메뉴 관리 기능
 
 	//메뉴 저장버튼
-	@PostMapping("/insert-menu")
+	@PostMapping("/admin/insert-menu")
 	public ResponseEntity<?> insertMenu(@RequestBody Menu menuDataDTO) {
 
 		logger.info("insertMenu Start {} ", menuDataDTO);
@@ -215,7 +213,7 @@ class MenuControl {
 
 
 	//메뉴 삭제
-	@DeleteMapping("/del-menu")
+	@DeleteMapping("/admin/del-menu")
 	public ResponseEntity deleteMenu(@RequestBody String cName, String pName) {
 
 		return (ResponseEntity) ResponseEntity.ok();
@@ -223,7 +221,7 @@ class MenuControl {
 
 
 	//메뉴 전체 출력
-	@PostMapping("/user")
+	@PostMapping("/admin/menulist")
 	public ResponseEntity<?> menuListAll(@RequestBody User_Data userID) {
 
 		logger.info("User {} Request : [menuListALL] is Start ", userID);
@@ -240,6 +238,7 @@ class MenuControl {
 		}
 
 	}
+
 	//endregion
 
 }
@@ -250,7 +249,48 @@ class UserPage{
 
 	private final Logger logger = LogManager.getLogger(UserPage.class);
 
+	private final Control control_;
 
+	@Autowired
+    UserPage(Control control) {
+        control_ = control;
+    }
+
+    //region 사용자 페이지
+
+	@PostMapping("/user/kioskpage")
+	public ResponseEntity<?> menuListAll(@RequestBody User_Data userID) {
+
+		logger.info("User {} Request : [/user/kioskpage] is Start ", userID);
+		String temp = userID.getUserId();
+		try{
+			List<Object[]> test = control_.menuGetList(temp);
+			if(test == null){
+				throw new Exception();
+			}
+			logger.info("User {} Request [menuListAll] is Finish", userID);
+			return ResponseEntity.ok(test);
+		}catch (Exception e){
+			return ResponseEntity.badRequest().body(null);
+		}
+
+	}
+
+	//endregion
+
+
+
+	//region QR 저장 코드
+
+//	@PutMapping("/qrCreate")
+//	public ResponseEntity<?> QRSave(String kioskID, String QrCode){
+//
+//		boolean test = control_.QR_SAVE(kioskID, QrCode);
+//
+//		return ResponseEntity.ok(200);
+//	}
+
+	//endregion
 
 
 }

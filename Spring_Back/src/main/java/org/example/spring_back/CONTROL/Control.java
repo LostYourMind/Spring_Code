@@ -4,6 +4,8 @@ package org.example.spring_back.CONTROL;
 
 import org.example.spring_back.DTOFILE.Menu.KioskInfo;
 import org.example.spring_back.DTOFILE.Menu.Menu;
+//import org.example.spring_back.DTOFILE.QR.QR_INFOMATION;
+//import org.example.spring_back.Metho_Code.QRManage.QRCodeManage;
 import org.example.spring_back.Metho_Code.UserControl_CODE.M_Code;
 import org.example.spring_back.Metho_Code.MenuControl_CODE.MenuControl;
 import org.example.spring_back.DTOFILE.User.User_Data;
@@ -15,9 +17,9 @@ import java.util.List;
 @Service
 public class Control {
 
-    //M_Code code_ = new M_Code();
     private final M_Code code_;
     private final MenuControl menuControl_;
+
 
     public Control(M_Code code_, MenuControl menuControl_) {
         this.code_ = code_;
@@ -82,6 +84,21 @@ public class Control {
     public List<Object[]> menuGetList(String useridValue){
         return menuControl_.menuGetList(useridValue);
     }
+
+
+    //endregion
+
+    //region QR 코드 관리
+
+//    public Boolean QR_SAVE(String kioskID, String QrCode){
+//
+//        QRCodeManage manage_ = new QRCodeManage();
+//
+//        QR_INFOMATION qr = manage_.saveQRCode(kioskID, QrCode);
+//
+//        if(qr == null){ return false; }
+//        else return true;
+//    }
 
 
     //endregion
