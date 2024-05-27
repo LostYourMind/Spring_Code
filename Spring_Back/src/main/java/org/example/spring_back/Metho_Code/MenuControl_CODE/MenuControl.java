@@ -92,6 +92,7 @@ class DB_Model {
 
     //endregion
 
+
     //region Insert Method
 
     public String insertKioskIDandInfo(Menu menuData){
@@ -129,11 +130,11 @@ class DB_Model {
 
     }
 
-    public Boolean insertCateAndProduct(String kioskId, Menu menuData){
 
-        int resultProduct = 0, resultCategory;
+    public Boolean insertCateAndProduct(String kioskId, Menu menuData) {
+        boolean allSuccess = true;
 
-        try{
+        try {
             for (Menu.Category categoryDto : menuData.getCategories()) {
                 String categoryName = categoryDto.getCategoryDetails().getCategoryName();
                 logger.info("Category Name: {}", categoryName);
@@ -141,7 +142,13 @@ class DB_Model {
                 CategoryEntity categoryEntity = new CategoryEntity();
                 categoryEntity.setKioskId(kioskId);
                 categoryEntity.setCategoryName(categoryName);
-                resultCategory = categoryRepository.insertCategoryInfo(kioskId,categoryName);
+                int resultCategory = categoryRepository.insertCategoryInfo(kioskId, categoryName);
+
+                if (resultCategory <= 0) {
+                    logger.error("Failed to insert category: {}", categoryName);
+                    allSuccess = false;
+                    continue;
+                }
 
                 // Process each Product in the Category
                 for (Menu.Product productDto : categoryDto.getProducts()) {
@@ -153,25 +160,38 @@ class DB_Model {
                     productEntity.setCategoryName(categoryName);
                     productEntity.setName(productDto.getName());
                     productEntity.setPrice(productDto.getPrice());
-                    productEntity.setImage(productDto.getImageBase64());
 
-                    resultProduct = productRepository.insertCategoryInfo(categoryName,  productEntity.getImage(), productEntity.getName(), productEntity.getPrice());
+                    // 디코딩하여 이미지 파일로 저장
+                    String imagePath = saveImage(productDto.getImageBase64(), productDto.getName());
+                    if (imagePath == null) {
+                        logger.error("Failed to save image for product: {}", productDto.getName());
+                        allSuccess = false;
+                        continue;
+                    }
+                    productEntity.setImage(imagePath);  // 이미지 파일 경로를 설정
+
+                    int resultProduct = productRepository.insertCategoryInfo(
+                            categoryName,
+                            productEntity.getImage(),  // 파일 경로를 DB에 저장
+                            productEntity.getName(),
+                            productEntity.getPrice()
+                    );
+
+                    if (resultProduct <= 0) {
+                        logger.error("Failed to insert product: {}", productDto.getName());
+                        allSuccess = false;
+                    }
                 }
-
-                if(resultCategory > 0 && resultProduct > 0){
-                    return true;
-                }
-                else throw new Exception("DB 저장 오류");
-
             }
-        }catch (Exception e){
-            logger.error(e);
+        } catch (Exception e) {
+            logger.error("Exception occurred while inserting categories and products", e);
             return false;
         }
-        return false;
+        return allSuccess;
     }
 
     //endregion
+
 
     //region Delete Method
 
@@ -193,6 +213,8 @@ class DB_Model {
     //endregion
 
 
+    //region 전체 출력
+
     @Transactional(readOnly = false)  // 읽기 전용 트랜잭션 설정
     public List<Object[]> GetKioskList(String userId){
         logger.info("Start GetKioskList / userId: {}", userId);
@@ -209,47 +231,36 @@ class DB_Model {
     }
 
 
-//
-//    @Transactional(readOnly = false)  // 읽기 전용 트랜잭션 설정
-//    public List<Object[]> GetKioskList(String userId){
-//        logger.info("Start GetKioskList / userId: {}", userId);
-//        try {
-//            List<Object[]> kioskList = kioskRepository.SelectAllKiosk(userId);
-//            kioskList.forEach(item -> {
-//                String base64Image = (String) item[7]; // 인덱스 7은 Base64 이미지 데이터를 가정
-//                if (base64Image.startsWith("data:image")) {
-//                    try {
-//                        byte[] imageBytes = decodeBase64ToImage(base64Image);
-//                        // 이미지를 파일로 저장 (예: userId를 파일 이름으로 사용)
-//                        saveImage(imageBytes, "output_" + userId + ".png");
-//                    } catch (Exception e) {
-//                        logger.error("Image processing error: ", e);
-//                    }
-//                }
-//            });
-//            logger.info("Kiosk List: {}", kioskList);
-//            return kioskList;
-//        } catch(Exception e) {
-//            logger.error("Error in GetKioskList: ", e);
-//            return null;
-//        }
-//    }
-//
-//    private byte[] decodeBase64ToImage(String base64Image) {
-//        String imageDataBytes = base64Image.substring(base64Image.indexOf(",") + 1);
-//        return Base64.getDecoder().decode(imageDataBytes);
-//    }
-//
-//    private void saveImage(byte[] imageBytes, String filename) throws Exception {
-//        String directoryPath = "";  // 이미지를 저장할 디렉토리 경로
-//        File directory = new File(directoryPath);
-//        if (!directory.exists()) {
-//            directory.mkdirs();  // 디렉토리가 존재하지 않는 경우, 디렉토리 생성
-//        }
-//
-//        File outputFile = new File(directory, filename);  // 파일 경로 조합
-//        try (OutputStream out = new FileOutputStream(outputFile)) {
-//            out.write(imageBytes);
-//        }
-//    }
+    //endregion
+
+
+    //region Base 64 Decode and Save Image Code
+
+    // Base64 디코딩 및 이미지 파일 저장 메서드 수정
+    private String saveImage(String base64Image, String productName) {
+        try {
+            String imageDataBytes = base64Image.substring(base64Image.indexOf(",") + 1);
+            byte[] imageBytes = Base64.getDecoder().decode(imageDataBytes);
+
+            // 지정된 경로로 디렉토리 설정
+            String directoryPath = "C:\\Users\\WSU\\Documents\\GitHub\\CapStone_Spring_Code\\Spring_Code\\Spring_Back\\src\\main\\java\\org\\example\\spring_back\\TEST_Image_File";
+            File directory = new File(directoryPath);
+            if (!directory.exists()) {
+                directory.mkdirs();  // 디렉토리가 존재하지 않는 경우, 디렉토리 생성
+            }
+
+            File outputFile = new File(directory, productName + ".png");  // 파일 이름을 productName으로 설정
+            try (OutputStream out = new FileOutputStream(outputFile)) {
+                out.write(imageBytes);
+            }
+            return outputFile.getAbsolutePath();  // 저장된 파일의 절대 경로를 반환
+        } catch (Exception e) {
+            logger.error("Error saving image for product {}: {}", productName, e.getMessage());
+            return null;
+        }
+    }
+
+    //endregion
+
+
 }

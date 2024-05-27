@@ -16,8 +16,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.spring_back.DTOFILE.User.User_Data;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 
+
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -30,7 +38,6 @@ public class SpringBackApplication {
 	}
 
 }
-
 
 
 //관리자 로그인 기능 및 회원가입 기능
@@ -54,7 +61,7 @@ class AdminController {
 	//region 회원가입 & 로그인 & 아이디 + 비밀번호 찾기
 
 	//회원가입 EndPoint
-	@PostMapping("/join")
+	@PostMapping("/admin/join")
 	public ResponseEntity<Boolean> createUser(@RequestBody User_Data user) {
 
 		User_Data result = control_.createUser(user);
@@ -71,7 +78,7 @@ class AdminController {
 
 
 	//로그인 EndPoint
-	@PostMapping("/login")
+	@PostMapping("/admin/login")
 	public ResponseEntity<String> Login(@RequestBody Object login_Req, HttpServletRequest request) {
 
 		LinkedHashMap<String, String> credentials = (LinkedHashMap<String, String>) login_Req;
@@ -105,7 +112,7 @@ class AdminController {
 
 
 	//로그아웃 EndPoint
-	@PostMapping("/logout")
+	@PostMapping("/admin/logout")
 	public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
 
 		logger.trace("Logout operation was Start");
@@ -123,7 +130,7 @@ class AdminController {
 	}
 
 	//아이디 찾기 EndPoint
-	@PutMapping("/findid")
+	@PutMapping("/admin/findid")
 	public ResponseEntity<?> findUser(@RequestBody User_Data user) {
 		//이메일 기준으로 아이디 찾기
 		
@@ -149,7 +156,7 @@ class AdminController {
 	}
 
 	//비밀번호 찾기 EndPoint
-	@PutMapping("/findPw")
+	@PutMapping("/admin/findPw")
 	public ResponseEntity<String> findPw(@RequestBody User_Data user) {
 		
 		
@@ -226,6 +233,7 @@ class MenuControl {
 
 		logger.info("User {} Request : [menuListALL] is Start ", userID);
 		String temp = userID.getUserId();
+
 		try{
 			List<Object[]> test = control_.menuGetList(temp);
 			if(test == null){
@@ -279,18 +287,51 @@ class UserPage{
 	//endregion
 
 
-
 	//region QR 저장 코드
 
-//	@PutMapping("/qrCreate")
-//	public ResponseEntity<?> QRSave(String kioskID, String QrCode){
-//
-//		boolean test = control_.QR_SAVE(kioskID, QrCode);
-//
-//		return ResponseEntity.ok(200);
-//	}
+
 
 	//endregion
 
 
+}
+
+
+@RestController
+class ImageController {
+
+	/**
+	 * 이 메서드는 이미지 파일에 대한 GET 요청을 처리.
+	 * 지정된 디렉토리에서 이미지 파일을 읽고 이를 응답으로 반환.
+	 *
+	 * @param filename 클라이언트가 요청한 이미지 파일의 이름
+	 * @return 이미지 파일을 리소스로 포함한 ResponseEntity 또는 오류 상태
+	 */
+	@GetMapping("/images/{filename}")
+	public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+		try {
+			// 이미지 파일이 저장된 디렉토리 경로 설정
+			String directoryPath = "C:\\Users\\WSU\\Documents\\GitHub\\CapStone_Spring_Code\\Spring_Code\\Spring_Back\\src\\main\\java\\org\\example\\spring_back\\TEST_Image_File";
+
+			// 요청된 이미지 파일에 대한 File 객체 생성
+			File file = new File(directoryPath, filename);
+
+			// 파일이 존재하는지 확인
+			if (!file.exists()) {
+				// 파일이 존재하지 않으면 404 Not Found 상태 반환
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+
+			// 파일을 FileSystemResource로 생성
+			Resource resource = new FileSystemResource(file);
+
+			// 파일을 포함한 응답 엔티티를 200 OK 상태로 반환
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+					.body(resource);
+		} catch (Exception e) {
+			// 오류가 발생하면 500 Internal Server Error 상태 반환
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }

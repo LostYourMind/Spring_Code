@@ -2,10 +2,8 @@
 
 package org.example.spring_back.CONTROL;
 
-import org.example.spring_back.DTOFILE.Menu.KioskInfo;
+
 import org.example.spring_back.DTOFILE.Menu.Menu;
-//import org.example.spring_back.DTOFILE.QR.QR_INFOMATION;
-//import org.example.spring_back.Metho_Code.QRManage.QRCodeManage;
 import org.example.spring_back.Metho_Code.UserControl_CODE.M_Code;
 import org.example.spring_back.Metho_Code.MenuControl_CODE.MenuControl;
 import org.example.spring_back.DTOFILE.User.User_Data;
